@@ -1,32 +1,30 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { User } from './entities/user.entity';
+import { PrismaService } from '../prisma.service';
+import { User as UserModel } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-    private users: User[] = [
-        {
-            id: '1',
-            username: 'idylicaro',
-            password:'123456'
-        }
-    ];
+  constructor(private readonly prisma: PrismaService) {}
 
-    findAll(){
-        return this.users
-    }
+  async findAll(): Promise<UserModel[] | []> {
+    return this.prisma.user.findMany();
+  }
 
-    findById(id: string){
-        const user = this.users.find((user) => user.id === id)
-        if (!user) throw new HttpException(`User ID${id} not found.`, HttpStatus.NOT_FOUND)
-        return user
-    }
+  async findById(id: string): Promise<UserModel> {
+    const user = this.prisma.user.findUnique({ where: { id: Number(id) } });
+    if (!user)
+      throw new HttpException(`User ID${id} not found.`, HttpStatus.NOT_FOUND);
+    return user;
+  }
 
-    create(createUserDto: any){
-        this.users.push(createUserDto)
-    }
+  async create(createUserDto: any): Promise<UserModel> {
+    return this.prisma.user.create({ data: createUserDto });
+  }
 
-    update(id:string, updateUserDto:any){
-        const indexUser = this.users.findIndex((user: User) => user.id === id)
-        this.users[indexUser] = updateUserDto
-    }
+  async update(id: string, updateUserDto: any): Promise<UserModel> {
+    return this.prisma.user.update({
+      data: updateUserDto,
+      where: { id: Number(id) },
+    });
+  }
 }
