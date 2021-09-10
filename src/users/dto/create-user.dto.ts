@@ -1,7 +1,7 @@
-import { Prisma } from '@prisma/client';
+import { User } from '../entities/user.entity';
 import { IsString } from 'class-validator';
 
-export class CreateUserDto implements Prisma.UserCreateInput {
+export class CreateUserDto extends User {
   @IsString()
   readonly username: string;
   @IsString()
