@@ -6,6 +6,7 @@ import { AuthService } from './shared/auth.service';
 import { LocalStrategy } from './shared/local.strategy';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './shared/jwt.strategy';
+import { BcryptService } from 'src/bcrypt.service';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { JwtStrategy } from './shared/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, BcryptService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}
