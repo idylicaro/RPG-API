@@ -4,11 +4,14 @@ import { UsersService } from 'src/users/shared/users.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersServices: UsersService,
-              private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly usersServices: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async validateUser(username: string, password: string) {
     const user = await this.usersServices.findByUsername(username);
+    // TODO: bycrtp
     if (user && user.password === password) {
       const { id, username } = user;
       return { id, username };
@@ -16,10 +19,10 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any){
-    const payload = {username: user.username, sub: user.id}
+  async login(user: any) {
+    const payload = { username: user.username, sub: user.id };
     return {
-      access_token: this.jwtService.sign(payload)
-    }    
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
