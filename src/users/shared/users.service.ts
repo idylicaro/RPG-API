@@ -3,10 +3,14 @@ import { PrismaService } from '../../prisma.service';
 import { User as UserModel } from '@prisma/client';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { BcryptService } from 'src/bcrypt.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly bcrypt: BcryptService,
+  ) {}
 
   async findAll(): Promise<UserModel[] | []> {
     return this.prisma.user.findMany();
@@ -30,7 +34,13 @@ export class UsersService {
   }
 
   async create(data: CreateUserDto): Promise<UserModel> {
-    return this.prisma.user.create({ data });
+    const hashedPassword = await this.bcrypt.hashPassword(data.password);
+    return this.prisma.user.create({
+      data: {
+        username: data.username,
+        password: hashedPassword,
+      },
+    });
   }
 
   async update(id: string, data: UpdateUserDto): Promise<UserModel> {
