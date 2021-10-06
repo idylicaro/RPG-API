@@ -16,7 +16,7 @@ export class UsersService {
     return this.prisma.user.findMany();
   }
 
-  async findById(id: string): Promise<UserModel> {
+  async findOne(id: string): Promise<UserModel> {
     const user = this.prisma.user.findUnique({ where: { id: Number(id) } });
     if (!user)
       throw new HttpException(`User ID${id} not found.`, HttpStatus.NOT_FOUND);
@@ -47,6 +47,12 @@ export class UsersService {
     return this.prisma.user.update({
       data,
       where: { id: Number(id) },
+    });
+  }
+
+  remove(id: number) {
+    return this.prisma.user.delete({
+      where: { id },
     });
   }
 }

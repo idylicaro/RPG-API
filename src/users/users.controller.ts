@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -25,9 +26,10 @@ export class UsersController {
     return this.usersService.findAll();
   }
   @Get(':id')
-  findById(@Param() params) {
-    return this.usersService.findById(params.id);
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(id);
   }
+  // todo: byUsername
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -36,10 +38,14 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  updatePassword(@Param() params, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(params.id, updateUserDto);
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(id, updateUserDto);
   }
 
-  //@Patch
-  //@Delete
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
+  }
+
 }
