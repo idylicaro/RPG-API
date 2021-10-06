@@ -1,7 +1,9 @@
 import { Prisma } from '@prisma/client';
 
 export class User implements Prisma.UserUncheckedCreateInput {
-  id?: number;
+  id?: string;
   username: string;
+  email: string;
   password: string;
+  emailConfirmed?: boolean;
 }
