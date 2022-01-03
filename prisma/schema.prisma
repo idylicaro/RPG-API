@@ -8,20 +8,23 @@ generator client {
 }
 
 model User {
-  id             String  @id @default(uuid())
-  username       String  @unique
-  email          String  @unique
+  id             String      @id @default(uuid())
+  username       String      @unique
+  email          String      @unique
   password       String
-  emailConfirmed Boolean @default(false)
+  emailConfirmed Boolean     @default(false)
+  Character      Character[]
 }
 
 model Character {
-  id Int @id @default(autoincrement())
-  name String
-  category_id Int 
-  hp Int @default(200)
-  strength Int @default(5)
-  defense Int @default(5)
-  agility Int @default(5)
-  intelligence Int @default(5)
+  id           Int    @id @default(autoincrement())
+  user         User   @relation(fields: [user_id], references: [id])
+  user_id      String
+  name         String
+  category_id  Int
+  hp           Int    @default(200)
+  strength     Int    @default(5)
+  defense      Int    @default(5)
+  agility      Int    @default(5)
+  intelligence Int    @default(5)
 }
