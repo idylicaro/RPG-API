@@ -23,6 +23,8 @@ model Character {
   name         String
   category     Category @relation(fields: [category_id], references: [id])
   category_id  Int
+  level        Int      @default(1)
+  experience   Int      @default(0)
   hp           Int      @default(200)
   strength     Int      @default(5)
   defense      Int      @default(5)

@@ -30,6 +30,11 @@ export class CharactersController {
     return this.charactersService.findOne(+id);
   }
 
+  @Get('/findByUser/:user_id')
+  findByUser(@Param('user_id') user_id: string) {
+    return this.charactersService.findByUser(user_id);
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,
