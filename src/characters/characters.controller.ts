@@ -10,6 +10,8 @@ import {
 import { CharactersService } from './shared/characters.service';
 import { CreateCharacterDto } from './dto/create-character.dto';
 import { UpdateCharacterDto } from './dto/update-character.dto';
+import { UpdateCharacterLevelDto } from './dto/update-character-level.dto';
+import { UpdateCharacterXpDto } from './dto/update-character-xp.dto';
 
 @Controller('characters')
 export class CharactersController {
@@ -35,12 +37,28 @@ export class CharactersController {
     return this.charactersService.findByUser(user_id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
+  @Patch('/updateName/:id')
+  updateName(
+    @Param('id') id: number,
     @Body() updateCharacterDto: UpdateCharacterDto,
   ) {
-    return this.charactersService.update(+id, updateCharacterDto);
+    return this.charactersService.updateName(+id, updateCharacterDto);
+  }
+
+  @Patch('/updateLevel/:id')
+  updateLevel(
+    @Param('id') id: number,
+    @Body() updateCharacterLevelDto: UpdateCharacterLevelDto,
+  ) {
+    return this.charactersService.updateLevel(+id, updateCharacterLevelDto);
+  }
+
+  @Patch('/updateXp/:id')
+  updateXp(
+    @Param('id') id: number,
+    @Body() updateCharacterXpDto: UpdateCharacterXpDto,
+  ) {
+    return this.charactersService.updateExperience(+id, updateCharacterXpDto);
   }
 
   @Delete(':id')

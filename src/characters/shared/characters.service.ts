@@ -3,6 +3,8 @@ import { PrismaService } from 'src/prisma.service';
 import { Character as CharacterModel } from '@prisma/client';
 import { CreateCharacterDto } from '../dto/create-character.dto';
 import { UpdateCharacterDto } from '../dto/update-character.dto';
+import { UpdateCharacterLevelDto } from '../dto/update-character-level.dto';
+import { UpdateCharacterXpDto } from '../dto/update-character-xp.dto';
 
 @Injectable()
 export class CharactersService {
@@ -32,18 +34,31 @@ export class CharactersService {
         `Characters by user not found.`,
         HttpStatus.NOT_FOUND,
       );
-      console.log('Here')
     return character;
   }
 
-  async update(id: number, data: UpdateCharacterDto): Promise<CharacterModel> {
+  async updateName(id: number, data: UpdateCharacterDto): Promise<CharacterModel> {
+    return this.prisma.character.update({
+      data,
+      where: { id },
+    });
+  }
+  async updateLevel(id: number, data: UpdateCharacterLevelDto): Promise<CharacterModel> {
+    return this.prisma.character.update({
+      data,
+      where: { id },
+    });
+  }
+  async updateExperience(id: number, data: UpdateCharacterXpDto): Promise<CharacterModel> {
     return this.prisma.character.update({
       data,
       where: { id },
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} character`;
+  async remove(id: number) {
+    return await this.prisma.character.delete({
+      where: { id },
+    });
   }
 }
