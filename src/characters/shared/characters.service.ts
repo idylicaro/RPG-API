@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { Character as CharacterModel } from '@prisma/client';
 import { CreateCharacterDto } from '../dto/create-character.dto';
@@ -18,9 +18,11 @@ export class CharactersService {
     return this.prisma.character.create({ data })
   }
 
-
-  findOne(id: number) {
-    return `This action returns a #${id} character`;
+  async findOne(id: number): Promise<CharacterModel> {
+    const character = this.prisma.character.findUnique({ where: { id } });
+    if (!character)
+      throw new HttpException(`Character ID${id} not found.`, HttpStatus.NOT_FOUND);
+    return character;
   }
 
   update(id: number, updateCharacterDto: UpdateCharacterDto) {
