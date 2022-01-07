@@ -3,6 +3,8 @@ import { PrismaService } from '../../prisma.service';
 import { Character } from '../entities/character.entity';
 import { CharactersService } from './characters.service';
 import { CreateCharacterDto} from '../dto/create-character.dto'
+import { async } from 'rxjs';
+import { HttpException } from '@nestjs/common';
 
 const makeFakeCharacterData = (): Character => ({
   id: 1, user_id: 't3st3', name: 'testUser', category_id: 2, level: 1, experience: 0, hp: 200, strength: 5, defense: 5, agility: 5, intelligence: 5
@@ -48,5 +50,24 @@ describe('CharactersService', () => {
     expect(createSpy).toHaveBeenCalledWith({data})
     expect(promiseResult).toEqual(makeFakeCharacterData())
   });
+
+  it('should returns character if findOne successful', async () => {
+    prisma.character.findUnique = jest.fn().mockReturnValueOnce(makeFakeCharacterData());
+    const createSpy = jest.spyOn(prisma.character, 'findUnique')
+    const data = 1
+    const promiseResult = await service.findOne(data)
+    expect(createSpy).toHaveBeenCalled()
+    expect(createSpy).toHaveBeenCalledWith({where: {id: data}})
+    expect(promiseResult).toEqual(makeFakeCharacterData())
+  })
+
+  it('should throw HttpException if findOne not successful', async () => {
+    prisma.character.findUnique = jest.fn().mockResolvedValue(null);
+    try {
+      const promiseResult = await service.findOne(1)
+    } catch (error) {
+      await expect(error).toThrow(HttpException)
+    }
+  })
 
 });
