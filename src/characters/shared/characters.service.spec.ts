@@ -1,6 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../prisma.service';
+import { Character } from '../entities/character.entity';
 import { CharactersService } from './characters.service';
+import { CreateCharacterDto} from '../dto/create-character.dto'
+
+const makeFakeCharacterData = (): Character => ({
+  id: 1, user_id: 't3st3', name: 'testUser', category_id: 2, level: 1, experience: 0, hp: 200, strength: 5, defense: 5, agility: 5, intelligence: 5
+})
+const makeFakeCreateCharacterDtoData = (): CreateCharacterDto => ({
+  id: null, user_id: 't3st3', name: 'testUser', category_id: 2, level: null, experience: null, hp: null, strength: null, defense: null, agility: null, intelligence: null
+})
 
 describe('CharactersService', () => {
   let service: CharactersService;
@@ -28,6 +37,16 @@ describe('CharactersService', () => {
     expect(characters[0].id).toBe(1)
     expect(characters[0].user_id).toBe('t3st3')
     expect(characters).toHaveLength(2)
+  });
+
+  it('should returns character if create successful', async () => {
+    prisma.character.create = jest.fn().mockReturnValueOnce(makeFakeCharacterData());
+    const createSpy = jest.spyOn(prisma.character, 'create')
+    const data = makeFakeCreateCharacterDtoData()
+    const promiseResult = await service.create(data)
+    expect(createSpy).toHaveBeenCalled()
+    expect(createSpy).toHaveBeenCalledWith({data})
+    expect(promiseResult).toEqual(makeFakeCharacterData())
   });
 
 });
