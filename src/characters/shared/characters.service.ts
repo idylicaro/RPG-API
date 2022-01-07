@@ -29,8 +29,7 @@ export class CharactersService {
   }
 
   async findByUser(user_id: string): Promise<CharacterModel[] | []> {
-    const character = this.prisma.character.findMany({ where: { user_id } });
-    return character;
+    return this.prisma.character.findMany({ where: { user_id } });
   }
 
   async updateName(id: number, data: UpdateCharacterDto): Promise<CharacterModel> {
