@@ -4,7 +4,7 @@ import { Character } from '../entities/character.entity';
 import { CharactersService } from './characters.service';
 import { CreateCharacterDto} from '../dto/create-character.dto'
 import { async } from 'rxjs';
-import { HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 const makeFakeCharacterData = (): Character => ({
   id: 1, user_id: 't3st3', name: 'testUser', category_id: 2, level: 1, experience: 0, hp: 200, strength: 5, defense: 5, agility: 5, intelligence: 5
@@ -62,11 +62,12 @@ describe('CharactersService', () => {
   })
 
   it('should throw HttpException if findOne not successful', async () => {
+    const fakeError = new HttpException(`Character ID 1 not found.`, HttpStatus.NOT_FOUND);
     prisma.character.findUnique = jest.fn().mockResolvedValue(null);
     try {
-      const promiseResult = await service.findOne(1)
+      await service.findOne(1)
     } catch (error) {
-      await expect(error).toThrow(HttpException)
+      await expect(error).toThrow(fakeError)
     }
   })
 

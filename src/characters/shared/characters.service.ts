@@ -20,20 +20,16 @@ export class CharactersService {
     return this.prisma.character.create({ data })
   }
 
-  async findOne(id: number): Promise<CharacterModel> {
+  async findOne(id: number): Promise<CharacterModel>  {
     const character = this.prisma.character.findUnique({ where: { id } });
-    if (!character)
+    if (!character){
       throw new HttpException(`Character ID${id} not found.`, HttpStatus.NOT_FOUND);
+    }
     return character;
   }
 
   async findByUser(user_id: string): Promise<CharacterModel[] | []> {
     const character = this.prisma.character.findMany({ where: { user_id } });
-    if (!character)
-      throw new HttpException(
-        `Characters by user not found.`,
-        HttpStatus.NOT_FOUND,
-      );
     return character;
   }
 
