@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  
+  db:
+    image: postgres:latest
+    container_name: API-RPG-db
+    restart: always
+    tty: true
+    ports: 
+      - '5432:5432'
+    volumes:
+      - postgres-vol:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=rpg
+
+volumes:
+  postgres-vol:
