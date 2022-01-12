@@ -11,6 +11,8 @@ async function bootstrap() {
       transform: true, // Converts all data received from the route into a 'Dto'
     }),
   );
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port);
+  });
 }
 bootstrap();
