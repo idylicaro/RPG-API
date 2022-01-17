@@ -6,13 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards
 } from '@nestjs/common';
 import { CharactersService } from './shared/characters.service';
 import { CreateCharacterDto } from './dto/create-character.dto';
 import { UpdateCharacterDto } from './dto/update-character.dto';
 import { UpdateCharacterLevelDto } from './dto/update-character-level.dto';
 import { UpdateCharacterXpDto } from './dto/update-character-xp.dto';
+import { JwtAuthGuard } from '../auth/shared/jwt-auth.guard'
 
+@UseGuards(JwtAuthGuard)
 @Controller('characters')
 export class CharactersController {
   constructor(private readonly charactersService: CharactersService) {}
